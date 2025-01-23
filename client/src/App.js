@@ -13,9 +13,9 @@ import Spinner from './components/Spinner/Spinner';
 import Signup from './Pages/Signup';
 import Login from './Pages/Login';
 import Landing from './Pages/Landing';
+import Myimages from './Pages/Myimages';
+import Favourites from './Pages/Favourites';
 
-const Myimages = lazy(() => import("./Pages/Myimages"));
-const Favourites = lazy(() => import("./Pages/Favourites"));
 
 // Component to conditionally render the layout
 const Layout = ({ children }) => {
