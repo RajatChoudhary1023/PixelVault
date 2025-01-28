@@ -15,16 +15,8 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_SECRET // Click 'View API Keys' above to copy your API secret
 });
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/'); // Save files locally to the "uploads" folder
-    },
-    filename: function (req, file, cb) {
-      cb(null, Date.now() + file.originalname); // Append timestamp to file name
-    },
-  });
-
-  const upload = multer({ storage: storage });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 router.get('/fetchallphotos',fetchuser,async (req,res)=> {
     try{
@@ -38,46 +30,43 @@ router.get('/fetchallphotos',fetchuser,async (req,res)=> {
 })
 
 router.post('/addphotos', fetchuser, upload.single('photo'), async (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({ error: "No file uploaded." });
-      }
-      console.log('Body:', req.body);
-      console.log('File:', req.file);
-      const { title, tag } = req.body;
-      const filepath = req.file.path;
-  
-      // Check the file path in the console
-      console.log('File path:', filepath);
-  
-      const existingphoto = await User.findOne({ filepath });
-      if (existingphoto) {
-        return res.status(400).json({ error: "Image already exists" });
-      }
-  
-      const uploadphoto = await cloudinary.uploader.upload(filepath, {
-        tags: ['pixelvault'],
-      });
-  
-      console.log(uploadphoto);  // Log the cloudinary upload result
-  
-      const photo = new User({
-        user: req.user.id,
-        title,
-        filepath: uploadphoto.secure_url,
-        size: req.file.size,
-        tag,
-      });
-  
-      const savephoto = await photo.save();
-      res.json(savephoto);
-  
-    } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ error: "Internal Server Error" }); // Ensure the response is JSON
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded." });
     }
-  });
-  
+
+    const { title, tag } = req.body;
+
+    // Upload file to Cloudinary using memory buffer
+    const result = await new Promise((resolve, reject) => {
+      const stream = cloudinary.uploader.upload_stream(
+        { folder: 'pixelvault', tags: ['pixelvault'] },
+        (error, result) => {
+          if (error) return reject(error);
+          resolve(result);
+        }
+      );
+      stream.end(req.file.buffer); // Pass the buffer to Cloudinary
+    });
+
+    // Save file details in MongoDB
+    const photo = new User({
+      user: req.user.id,
+      title,
+      filepath: result.secure_url, // Cloudinary URL
+      size: req.file.size,
+      tag,
+    });
+
+    const savedPhoto = await photo.save();
+    res.status(200).json(savedPhoto);
+
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 
 router.put('/updatephoto/:id', fetchuser, upload.single('photo'), async (req, res) => {
   try {
@@ -185,7 +174,7 @@ router.delete('/removefavourites/:id',fetchuser,async (req,res)=> {
     if (item.user.toString()!==req.user.id){return res.status(501).send("Not Allowed")}
 
     item=await fav.findByIdAndDelete(req.params.id)
-    res.status(200).send("Removed From Favourites Successfully")
+    res.status(200).json({message:"Removed from favourites successfully"})
   }
   catch (error) {
     console.error(error.message);

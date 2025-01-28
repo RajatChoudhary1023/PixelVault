@@ -131,7 +131,10 @@ const Photostate=(props)=> {
             if (!response.ok) {
                 throw new Error(data.error || "Failed to remove item");
             }
-            setphotos(data)
+            // setphotos(data)
+            setphotos((prevPhotos) =>
+            prevPhotos.filter((photo) => photo._id !== id)
+          ); 
         } catch (error) {
             console.error("Error removing favourite:", error.message); // Log the error message 
           }
