@@ -29,7 +29,7 @@ const Login = () => {
     setError("");
     console.log("Form submitted successfully", credentials);
     // Handle form submission logic (e.g., API call)
-    const response=await fetch('https://pixelvault.onrender.com/api/auth/login',{
+    const response=await fetch('http://localhost:5000/api/auth/login',{
       method:"POST",
       headers:{
         "Content-type":"Application/json",
@@ -72,7 +72,7 @@ const Login = () => {
           {error && <p className="error-message">{error}</p>}
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="email">E-mail</label>
+              <label htmlFor="email" id="labelname">E-mail</label>
               <input
                 type="email"
                 id="email"
@@ -83,7 +83,7 @@ const Login = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password" id="labelname">Password</label>
               <input
                 type="password"
                 id="password"

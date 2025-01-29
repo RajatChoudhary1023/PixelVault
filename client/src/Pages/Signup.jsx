@@ -38,7 +38,7 @@ const Signup = () => {
     setError("");
     console.log("Form submitted successfully", credentials);
     // Handle form submission logic (e.g., API call)
-    const response=await fetch('https://pixelvault.onrender.com/api/auth/createuser',{
+    const response=await fetch('http://localhost:5000/api/auth/createuser',{
       method:"POST",
       headers:{
         "Content-Type": "application/json",
@@ -73,7 +73,7 @@ const Signup = () => {
           {error && <p className="error-message">{error}</p>}
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name" id="labelname">Name</label>
               <input
                 type="text"
                 id="name"
@@ -84,7 +84,7 @@ const Signup = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="email">E-mail</label>
+              <label htmlFor="email" id="labelname">E-mail</label>
               <input
                 type="email"
                 id="email"
@@ -95,7 +95,7 @@ const Signup = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password" id="labelname">Password</label>
               <input
                 type="password"
                 id="password"
@@ -106,7 +106,7 @@ const Signup = () => {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="confirmPassword">Confirm Password</label>
+              <label htmlFor="confirmPassword" id="labelname">Confirm Password</label>
               <input
                 type="password"
                 id="confirmPassword"

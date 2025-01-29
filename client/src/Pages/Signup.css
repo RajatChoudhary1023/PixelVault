@@ -49,6 +49,9 @@
     color: #001f3f;
     margin-bottom: 0.5rem;
   }
+  #labelname{
+    color:#001f3f;
+  }
   
   input {
     width: 90%;
@@ -64,10 +67,10 @@
   }
   
   .signup-button {
-    width: 70%;
+    width: 45%;
     background: linear-gradient(to right, #001f3f, black);
     color: white;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem ;
     border: none;
     border-radius: 5px;
     cursor: pointer;

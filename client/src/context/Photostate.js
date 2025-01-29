@@ -2,7 +2,7 @@ import { useState } from "react";
 import Photocontext from "./Photocontext";
 
 const Photostate=(props)=> {
-    const host="https://pixelvault.onrender.com"
+    const host="http://localhost:5000"
 
     const initialphotos=[]
     const [photos,setphotos]=useState(initialphotos)

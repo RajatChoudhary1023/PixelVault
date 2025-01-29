@@ -3,7 +3,7 @@ const router=expres.Router()
 const User=require('../Models/auth')
 const bcrypt=require('bcryptjs')
 const jwt=require('jsonwebtoken')
-const env=require('dotenv')
+const env=require('dotenv').config()
 const JWT_SECRET=process.env.JWT_SECRET
 const fetchuser=require('../Middleware/fetchuser')
 
